@@ -10,14 +10,13 @@ app = Flask(__name__)
 def hello():
     
     body = request.values.get("Body", None)
-    print "BODY: " + body
-
+   
     page = urllib2.urlopen("http://www.goremountain.com/mountain/snow-report")
     soup = BeautifulSoup(page)
     trails  = str(soup.find("div", "alpineTrailsLeft").get_text())
     lifts   = str(soup.find("div", "alpineLiftsLeft").get_text())
     resp = twiml.Response()
-    resp.message(" Ski report for Gore Mountain: \n" + trails + lifts)
+    resp.message(body + " Ski report for Gore Mountain: \n" + trails + lifts)
     return str(resp)
 
 
