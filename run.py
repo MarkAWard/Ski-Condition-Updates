@@ -1,3 +1,5 @@
+import urllib2
+from bs4 import BeautifulSoup
 from flask import Flask, request, redirect
 from twilio import twiml
 import os
@@ -6,14 +8,17 @@ app = Flask(__name__)
 
 @app.route("/", methods=['GET', 'POST'])
 def hello():
+    page = urllib2.urlopen("http://www.goremountain.com/mountain/snow-report")
+    soup = BeautifulSoup(page)
+    trails  = str(soup.find("div", "alpineTrailsLeft").get_text())
     resp = twiml.Response()
-    resp.message("Hello, mobile monkey!")
+    resp.message("Hello" + trails)
     return str(resp)
-#    return "Hello World!"
 
 
 @app.route("/other")
 def next():
+
     return "go away World!"
 
 if __name__ == "__main__":
