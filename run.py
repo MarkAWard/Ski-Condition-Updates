@@ -11,8 +11,9 @@ def hello():
     page = urllib2.urlopen("http://www.goremountain.com/mountain/snow-report")
     soup = BeautifulSoup(page)
     trails  = str(soup.find("div", "alpineTrailsLeft").get_text())
+    lifts   = str(soup.find("div", "alpineLiftsLeft").get_text())
     resp = twiml.Response()
-    resp.message("Hello" + trails)
+    resp.message("Hello! Ski report for Gore Mountain: \n" + trails + lifts)
     return str(resp)
 
 
