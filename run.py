@@ -11,7 +11,7 @@ app = Flask(__name__)
 def ski_report():
     
     body = request.values.get("Body", None)
-#    body = "Gore UpDate WeaTHer"
+    body = "Gore UpDate WeaTHer"
     text = body.lower().split(' ')
     resp = twiml.Response()
 
@@ -24,7 +24,7 @@ def ski_report():
     else:
         resp_body = "Sorry we do not currently support '" + text[0] + "'. Trying sending 'Gore' for realtime mountain updates."
 
-    resp_body += "\n\n" + strftime("%a, %d %b %Y %X +0000", gmtime())
+    resp_body += "\n\n" + strftime("%a, %d %b %Y %X")
     resp.message(resp_body)
     return str(resp)
 
