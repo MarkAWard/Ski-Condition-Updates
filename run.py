@@ -39,11 +39,11 @@ def ski_report():
         body = request.values.get("Body", None)
         text = body.lower().split(' ')
     except:
-        body = "NONE "
+        body = "Gore mountain update "
         text =  body.lower().split(' ')
 
     if text[0] == "gore":
-        resp_body = GoreConditions()
+        resp_body = Gore_Conditions()
     else:
         resp_body = "Sorry we do not currently support '" + text[0] + "'. Trying sending 'Gore' for realtime mountain updates."
 
