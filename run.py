@@ -98,6 +98,13 @@ def ski_report():
     return str(resp)
 
 
+@app.route("/voice", methods=['GET', 'POST'])
+def Welcome():
+    
+    resp = twiml.Response()
+    resp.say("Thank you for calling! You may also text this number to receive ski condition updates for Gore Mountain.")
+    return str(resp)
+
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 8000))
