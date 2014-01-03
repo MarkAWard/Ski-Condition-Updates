@@ -31,6 +31,30 @@ def Gore_Conditions():
 
     return response
 
+def Get_Name(index, words):
+    i = index + 1
+    name = ""
+    while i < len(words):
+        name += str(words[i])
+        i += 1
+        if i < len(words):
+            name += " "
+    return name
+                     
+def Trail_Search(trail_name):
+
+    page = urllib2.urlopen("http://www.goremountain.com/mountain/snow-report")
+    soup = BeautifulSoup(page)
+    
+    try:
+        results = soup.find(text= trail_name)
+        open_trail  = results.findNext("span")
+        groom_trail = open_trail.find_next()
+    except:
+        return None, None
+    
+    return str(open_trail).find("open"), str(groom_trail).find("groomed")
+
 
 @app.route("/", methods=['GET', 'POST'])
 def ski_report():
@@ -39,11 +63,31 @@ def ski_report():
         body = request.values.get("Body", None)
         text = body.lower().split(' ')
     except:
-        body = "Gore mountain update "
-        text =  body.lower().split(' ')
+        body = "Gore mountain trail Half 'n' Half"
+        text =  body.split(' ')
 
-    if text[0] == "gore":
-        resp_body = Gore_Conditions()
+    if text[0].lower() == "gore":
+        
+        if "trail" in text:
+            index = text.index("trail")
+            trail_name = Get_Name(index, text)
+            o_stat, g_stat = Trail_Search(trail_name)
+
+            if o_stat > 0:
+                resp_body = trail_name + " is open"
+                if g_stat > 0:
+                    resp_body += " and groomed!"
+                else:
+                    resp_body += "!"
+            else:
+                if o_stat == None:
+                    resp_body = "Sorry could not find trail: " + trail_name
+                else:
+                    resp_body = trail_name + " is closed :( "
+
+        else:
+            resp_body = Gore_Conditions()
+    
     else:
         resp_body = "Sorry we do not currently support '" + text[0] + "'. Trying sending 'Gore' for realtime mountain updates."
 
