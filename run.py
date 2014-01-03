@@ -61,7 +61,7 @@ def ski_report():
     
     try:
         body = request.values.get("Body", None)
-        text = body.lower().split(' ')
+        text = body.split(' ')
     except:
         body = "Gore mountain trail Half 'n' Half"
         text =  body.split(' ')
