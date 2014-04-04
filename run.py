@@ -32,7 +32,7 @@ def Gore_Conditions():
     makeSnow = str(makeSnow.get_text())
     
     # format the response text
-    response = "Ski report for Gore Mountain: \n" + trails + lifts  +'\n'+ depth +'\n'+ surface1 +'\n'+ surface2 +'\n'+ skiBowl +'\n'+ newSnow +'\n'+ makeSnow
+    response = "Ski report for Gore Mountain \n" + trails + lifts  +'\n'+ depth +'\n'+ surface1 +'\n'+ surface2 +'\n'+ skiBowl +'\n'+ newSnow +'\n'+ makeSnow
 
     return response
 
@@ -71,6 +71,23 @@ def Trail_Search(trail_name):
     
     return str(open_trail).find("open"), str(groom_trail).find("groomed")
 
+def Trail_Response(trail, o_stat, g_stat):
+    """
+    handle the results from the trail lookup and return a formatted message
+    """
+    if o_stat > 0:
+        response = trail + " is open"
+        if g_stat > 0:
+            response += " and groomed!"
+        else:
+            response += "!"
+    else:
+        if o_stat == None:
+            response = "Sorry could not find trail: " + trail
+        else:
+            response = trail + " is closed :( "
+    return response
+
 
 @app.route("/", methods=['GET', 'POST'])
 def ski_report():
@@ -93,19 +110,8 @@ def ski_report():
             # trail name is whatever comes after "trail"
             trail_name = Get_Name(index, text)
             o_stat, g_stat = Trail_Search(trail_name)
-
-            if o_stat > 0:
-                resp_body = trail_name + " is open"
-                if g_stat > 0:
-                    resp_body += " and groomed!"
-                else:
-                    resp_body += "!"
-            else:
-                if o_stat == None:
-                    resp_body = "Sorry could not find trail: " + trail_name
-                else:
-                    resp_body = trail_name + " is closed :( "
-
+            resp_body = Trail_Response(trail_name, o_stat, g_stat)
+            
         # respond with mountain conditions
         else:
             resp_body = Gore_Conditions()
@@ -124,7 +130,8 @@ def ski_report():
 def Welcome():
     # trying voice call out
     resp = twiml.Response()
-    resp.say("Thank you for calling! You may also text this number to receive ski condition updates for Gore Mountain.")
+    resp.say("You may also text this number to receive condition updates")
+    resp.say(Gore_Conditions())
     return str(resp)
 
 
